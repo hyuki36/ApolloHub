@@ -43,7 +43,7 @@
     </div>
 
     <div class="grid">
-      <div class="card"><span class="tag">CORE</span><h3>Real anti-raw</h3><p>The API inspects User-Agent + Sec-Fetch. Browsers get a black HTML page + redirect to <b>/#home</b>. Roblox (Roblox UA) + correct key gets <b>text/plain</b> Lua.</p></div>
+      <div class="card"><span class="tag">CORE</span><h3>Real anti-raw</h3><p>Browsers get a black page + redirect to <b>/#home</b>. Bots and curl with a valid key get only the <b>loader snippet</b>. The game (Roblox UA) + correct key gets the <b>original source</b>.</p></div>
       <div class="card"><h3>Per-link key</h3><p>Every link carries its own <b>id + key</b> (64 chars). Without the key, even a spoofed Roblox UA only gets a harmless comment.</p></div>
       <div class="card"><h3>Place lock / expiry</h3><p>Lock a link to a <b>PlaceId</b> and set an expiry time when creating it. Wrong game gets rejected.</p></div>
     </div>
@@ -93,7 +93,7 @@ loadstring(game:HttpGet(_u))()</pre>
         <button class="mini" id="btn-copy-loader">Copy Loader</button>
         <button class="mini" id="btn-test">Open test (returns Home)</button>
       </div>
-      <p class="hint">The “Open test” button opens the URL in a browser → you will see black, then Home. That is correct. Only Roblox + key receives code.</p>
+      <p class="hint">“Open test” opens the URL in a browser → black, then Home. Bots/curl receive the loader snippet. Only the game receives the original source.</p>
     </div>
 
     <div class="codebox">
