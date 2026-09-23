@@ -77,7 +77,7 @@ module.exports = async function handler(req, res) {
       url: baseUrl(req) + '/api/r?id=' + encodeURIComponent(entry.id) + '&k=' + encodeURIComponent(entry.k),
       payloadUrl: baseUrl(req) + '/api/payload?s=' + encodeURIComponent(slug) + '&k=' + encodeURIComponent(entry.k),
       payloadLoader: buildPayloadLoader(host, entry),
-      rawUrl: baseUrl(req) + '/raw/' + encodeURIComponent(slug) + '/' + encodeURIComponent(entry.k),
+      rawUrl: baseUrl(req) + '/raw/' + encodeURIComponent(slug) + '.lua',
       rawLoader: buildRawLoader(host, entry),
       persisted: Boolean(entry.persisted)
     });

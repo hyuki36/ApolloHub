@@ -1,8 +1,8 @@
-// GET /raw/:slug/:key — raw giong GitHub (rewrite tu vercel.json).
+// GET /raw/:slug[.lua][/ :key] — raw giong GitHub, KHONG can key.
 // Browser mo -> NOT AUTHORIZED + ve #home, khong xem duoc source.
-// Fetcher (.get/curl) + key dung -> loader 1 dong.
-// Game (Roblox UA) + key dung -> SOURCE GOC.
-const { clientKind, sendBlank, sendLua, safeEqual, buildRawLoader, getHost } = require('../lib/detect');
+// Fetcher (.get/curl) -> loader 1 dong (load trong game van ra source goc).
+// Game (Roblox UA) -> SOURCE GOC.
+const { clientKind, sendBlank, sendLua, buildRawLoader, getHost } = require('../lib/detect');
 const { getScript } = require('../lib/store');
 
 module.exports = async function handler(req, res) {
@@ -11,8 +11,8 @@ module.exports = async function handler(req, res) {
     return res.status(405).send('Method Not Allowed');
   }
   const q = req.query || {};
-  const id = String(q.slug || q.s || q.id || '');
-  const k = String(q.key || q.k || '');
+  // Chap nhan .lua o cuoi cho giong file that: /raw/myscript.lua
+  const id = String(q.slug || q.s || q.id || '').replace(/\.lua$/i, '');
   const kind = clientKind(req);
   if (!id) return sendBlank(res);
 
@@ -30,7 +30,7 @@ module.exports = async function handler(req, res) {
     return sendLua(res, '-- [ApolloHub] wrong game');
   }
   if (kind === 'browser') return sendBlank(res);
-  if (!safeEqual(k, entry.k)) return sendLua(res, '-- [ApolloHub] invalid key');
+  // Khong can key: game that -> source goc, fetcher -> loader 1 dong.
   if (kind === 'roblox') return sendLua(res, entry.code);
   return sendLua(res, buildRawLoader(getHost(req), entry));
 };

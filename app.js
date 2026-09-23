@@ -236,9 +236,9 @@
     mk('Edit', () => startEdit(s.id));
     mk('Loader', () => {
       const host = location.host;
-      const loader = 'loadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '/' + s.k + '"))()';
+      const loader = 'loadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '.lua"))()';
       el('r-slug').value = s.slug;
-      el('r-url').value = 'https://' + host + '/raw/' + encodeURIComponent(s.slug) + '/' + encodeURIComponent(s.k);
+      el('r-url').value = 'https://' + host + '/raw/' + encodeURIComponent(s.slug) + '.lua';
       el('r-loader').value = loader;
       el('result').classList.add('show');
       el('result').scrollIntoView({ behavior: 'smooth', block: 'center' });

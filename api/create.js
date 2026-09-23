@@ -80,7 +80,7 @@ module.exports = async function handler(req, res) {
     + 'local _h=(typeof(gethwid)=="function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())\n'
     + 'local _u=("https://' + getHost(req) + '/api/payload?s=".._s.."&k=".._k.."&hwid="..tostring(_h or "unknown"):gsub("[^%w%-%.:]","").."&place="..tostring(game.PlaceId))\n'
     + 'loadstring(game:HttpGet(_u))()';
-  const rawUrl = base + '/raw/' + encodeURIComponent(slug) + '/' + encodeURIComponent(k);
+  const rawUrl = base + '/raw/' + encodeURIComponent(slug) + '.lua';
   const rawLoader = 'loadstring(game:HttpGet("' + rawUrl + '"))()';
 
   return res.status(200).json({ id, slug, k, name, url, payloadUrl, loader, payloadLoader, rawUrl, rawLoader, persisted: Boolean(entry.persisted) });
