@@ -67,16 +67,9 @@ Vercel → Project → **Settings → Environment Variables**:
 
 Repo `scripts.json` là sự thật vĩnh viễn, server chỉ là bộ nhớ chạy. Cách giữ script vĩnh viễn: gom entries đã tạo thành file `scripts.json` đầy đủ rồi upload đè lên repo (trang upload của repo → Commit changes). Vercel tự redeploy. Xong.
 
-## 3c. Review bot (tự động duyệt, không setup)
+## 3c. Giữ storage sống (keep-alive, không setup)
 
-Con bot ẩn chạy mỗi 10 phút bằng GitHub Actions (`.github/workflows/bot-sync.yml`), dùng token tự động của Actions — bạn không cần làm gì:
-
-1. Bot gọi `POST /api/bot/export`, server verify token có quyền push repo mới nhả source.
-2. Bot kiểm tra từng script: rỗng / quá lớn / slug sai / chứa webhook Discord → bỏ qua + ghi log.
-3. Script sạch được merge vào `scripts.json` (thêm mới + cập nhật, không bao giờ xóa) rồi commit.
-4. Vercel redeploy → link sống vĩnh viễn, đúng source gốc.
-
-Muốn chạy ngay: repo → Actions → `ApolloHub review bot` → Run workflow. Lưu ý: bot chỉ hốt được script còn sống lúc nó quét — script tạo xong nên để yên, đừng restart liên tục.
+Con bot review đã xóa. Thay vào đó, GitHub Actions ping web mỗi 5 phút (`.github/workflows/keepalive.yml`, không cần secret) để Vercel không tắt instance — scripts tạo trên web sống lâu trong storage. Quy tắc duy nhất: **đừng push code mới khi không cần**, mỗi lần redeploy là memory reset 1 lần.
 
 ## 3b. Scripts Storage + tài khoản (mới)
 

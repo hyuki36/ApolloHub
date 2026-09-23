@@ -1,0 +1,19 @@
+name: ApolloHub keepalive
+
+# Giu server luon am: ping lien tuc de Vercel khong tat instance,
+# scripts trong web storage song lau. Khong can secret, khong ghi repo.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sL --max-time 20 -o /dev/null -w "list:%{http_code}\n" "https://apollohub-nu.vercel.app/api/list"
+          curl -sL --max-time 20 -o /dev/null -w "raw:%{http_code}\n" "https://apollohub-nu.vercel.app/api/raw"
