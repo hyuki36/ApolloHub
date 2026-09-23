@@ -18,14 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch approved scripts from live site
+      - name: Fetch approved scripts from live site (3 passes)
         env:
           BOT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -sL -X POST "https://apollohub-nu.vercel.app/api/bot/export" \
-            -H "Authorization: Bearer $BOT_TOKEN" \
-            -o /tmp/apollo_export.json
-          python3 bot/sync.py
+          for i in 1 2 3; do
+            echo "--- pass $i ---"
+            curl -sL -X POST "https://apollohub-nu.vercel.app/api/bot/export" \
+              -H "Authorization: Bearer $BOT_TOKEN" \
+              -o /tmp/apollo_export.json
+            python3 bot/sync.py
+            if [ "$i" != "3" ]; then sleep 90; fi
+          done
 
       - name: Commit if changed
         run: |
