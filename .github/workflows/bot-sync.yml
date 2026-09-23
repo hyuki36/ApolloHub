@@ -24,12 +24,17 @@ jobs:
         run: |
           for i in 1 2 3; do
             echo "--- pass $i ---"
-            curl -sL -X POST "https://apollohub-nu.vercel.app/api/bot/export" \
+            if curl -sL --fail --max-time 30 -X POST "https://apollohub-nu.vercel.app/api/bot/export" \
               -H "Authorization: Bearer $BOT_TOKEN" \
-              -o /tmp/apollo_export.json
-            python3 bot/sync.py
+              -o /tmp/apollo_export.json; then
+              python3 -c "import json;json.load(open('/tmp/apollo_export.json'));print('export ok')" \
+                && python3 bot/sync.py || echo "pass $i: sync skipped (bad export)"
+            else
+              echo "pass $i: fetch failed (deploy in progress?), retry next pass"
+            fi
             if [ "$i" != "3" ]; then sleep 90; fi
           done
+          echo "sweep done"
 
       - name: Commit if changed
         run: |
