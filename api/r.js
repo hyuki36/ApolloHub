@@ -38,6 +38,8 @@ module.exports = async function handler(req, res) {
   }
 
   // Trinh duyet vao thang link raw -> day ve Home, khong dua gi.
+  // Public sources: ai cung doc duoc.
+  if (entry.isPublic) return sendLua(res, entry.code);
   if (kind === 'browser') return sendBlank(res);
 
   // Sai key -> khong dua gi (ke ca loader, vi loader chua key that).

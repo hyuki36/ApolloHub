@@ -128,6 +128,7 @@
     editingId = null;
     el('f-name').value = ''; el('f-slug').value = ''; el('f-code').value = '';
     el('f-place').value = ''; el('f-exp').value = '0'; el('f-son').value = '';
+    el('f-public').checked = false;
     el('f-slug').disabled = false;
     syncCreateBtn(); createMsg('');
     el('result').classList.remove('show');
@@ -172,6 +173,7 @@
       tdKey.appendChild(code);
       const tdType = document.createElement('td');
       const chips = [];
+      if (s.isPublic) chips.push(['PUB', true]);
       if (s.sonSlug) chips.push(['SON', true]);
       if (s.placeLock) chips.push(['LOCK', false]);
       if (s.expiresAt) chips.push(['EXP', false]);
@@ -224,6 +226,7 @@
   el('btn-cancel-edit').addEventListener('click', () => {
     editingId = null;
     el('f-name').value = ''; el('f-slug').value = ''; el('f-code').value = '';
+    el('f-public').checked = false;
     el('f-slug').disabled = false;
     syncCreateBtn(); createMsg('');
     hideEditor();
@@ -236,17 +239,18 @@
     const placeLock = el('f-place').value.trim();
     const expireHours = Number(el('f-exp').value || 0);
     const sonSlug = el('f-son').value.trim();
+    const isPublic = el('f-public').checked;
     if (!code.trim()) { createMsg('Paste your code first'); return; }
     createMsg(editingId ? 'Saving...' : 'Creating...');
     if (editingId) {
-      const r = await api('/api/scripts?id=' + encodeURIComponent(editingId), 'PUT', { name, code, placeLock, expireHours, sonSlug });
+      const r = await api('/api/scripts?id=' + encodeURIComponent(editingId), 'PUT', { name, code, placeLock, expireHours, sonSlug, isPublic });
       if (!r.ok) { createMsg(r.data.error || 'Save failed'); return; }
       createMsg('Saved. Game loads the new source immediately.');
       editingId = null; el('f-slug').disabled = false; syncCreateBtn();
       loadManaged();
       return;
     }
-    const r = await api('/api/scripts', 'POST', { name, slug, code, placeLock, expireHours, sonSlug });
+    const r = await api('/api/scripts', 'POST', { name, slug, code, placeLock, expireHours, sonSlug, isPublic });
     if (!r.ok) { createMsg(r.data.error || 'Create failed'); return; }
     el('r-slug').value = r.data.slug;
     el('r-url').value = r.data.rawUrl || r.data.payloadUrl;
@@ -318,6 +322,7 @@
     el('f-slug').disabled = true;
     el('f-code').value = s.code || '';
     el('f-son').value = s.sonSlug || '';
+    el('f-public').checked = !!s.isPublic;
     el('f-place').value = s.owner !== undefined && s.placeLock ? s.placeLock : (s.placeLock || '');
     syncCreateBtn(); createMsg('Editing [' + (s.slug || s.id) + '] — slug cannot change.');
     el('editor').style.display = '';

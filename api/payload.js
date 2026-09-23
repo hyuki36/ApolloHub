@@ -28,6 +28,8 @@ module.exports = async function handler(req, res) {
     if (kind === 'browser') return sendBlank(res);
     return sendLua(res, '-- [ApolloHub] wrong game');
   }
+  // Public sources: ai cung doc duoc (ke ca browser).
+  if (entry.isPublic) return sendLua(res, entry.code);
   if (kind === 'browser') return sendBlank(res);
   // SonStudio gate: neu gan sonSlug thi key = key user ben SonStudio (thay cho k noi bo).
   if (entry.sonSlug) {

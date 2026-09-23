@@ -67,6 +67,7 @@ module.exports = async function handler(req, res) {
       id: newId(), slug, k: newKey(), name, code,
       owner: viewer.email,
       sonSlug: cleanSlug(body.sonSlug) || null,
+      isPublic: body.isPublic ? true : false,
       createdAt: Date.now(),
       placeLock: String(body.placeLock || '').trim() || null,
       expiresAt: Number(body.expireHours || 0) > 0 ? Date.now() + Number(body.expireHours) * 3600 * 1000 : null
@@ -107,6 +108,7 @@ module.exports = async function handler(req, res) {
     }
     if (body.placeLock !== undefined) patch.placeLock = body.placeLock;
     if (body.sonSlug !== undefined) patch.sonSlug = body.sonSlug;
+    if (body.isPublic !== undefined) patch.isPublic = body.isPublic;
     if (body.expireHours !== undefined) {
       patch.expiresAt = Number(body.expireHours || 0) > 0 ? Date.now() + Number(body.expireHours) * 3600 * 1000 : null;
     }

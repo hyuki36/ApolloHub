@@ -29,6 +29,9 @@ module.exports = async function handler(req, res) {
     if (kind === 'browser') return sendBlank(res);
     return sendLua(res, '-- [ApolloHub] wrong game');
   }
+  // Public sources (giong SonStudio public): ai cung doc duoc source goc.
+  // Chu script tu obfuscate truoc khi gan.
+  if (entry.isPublic) return sendLua(res, entry.code);
   if (kind === 'browser') return sendBlank(res);
   // SonStudio gate: chi kich hoat khi script gan sonSlug.
   if (entry.sonSlug) {
