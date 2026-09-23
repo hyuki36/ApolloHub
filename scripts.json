@@ -9,6 +9,16 @@
       "createdAt": 0,
       "placeLock": null,
       "expiresAt": null
+    },
+    {
+      "id": "apollo_test",
+      "slug": "test",
+      "k": "aca0501e6932986e8605b3829d1c1b57c6156c30809f167f.1790134434423",
+      "name": "test",
+      "code": "-- [ApolloHub:test] anti-raw link permanente\nlocal _place = tostring(game.PlaceId)\nprint(\"[ApolloHub] test loaded | place: \" .. _place)\npcall(function()\n  game:GetService(\"StarterGui\"):SetCore(\"SendNotification\", {\n    Title = \"ApolloHub\",\n    Text = \"test loaded | place \" .. _place,\n    Duration = 5\n  })\nend)\n",
+      "createdAt": 1790134500000,
+      "placeLock": null,
+      "expiresAt": null
     }
   ]
 }
