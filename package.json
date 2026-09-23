@@ -1,0 +1,9 @@
+{
+  "name": "apollohub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ApolloHub — Roblox anti-raw hub on Vercel",
+  "engines": {
+    "node": ">=18"
+  }
+}

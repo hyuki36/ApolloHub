@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ApolloHub — Roblox Anti-Raw Hub</title>
+<meta name="description" content="ApolloHub — anti-raw loadstring hub. Browsers see a black screen, Roblox still loads the full code.">
+<link rel="icon" href="https://i.pinimg.com/1200x/fa/ca/7a/faca7a2e4250f6684759598f006db0b7.jpg">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<div class="bg-veil"></div>
+<div class="bg-grain"></div>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#home">
+      <img src="https://i.pinimg.com/1200x/fa/ca/7a/faca7a2e4250f6684759598f006db0b7.jpg" alt="ApolloHub">
+      <span><b>APOLLOHUB</b><small>ANTI-RAW SYSTEM</small></span>
+    </a>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="home">Home</button>
+      <button class="tab-btn" data-tab="link">Link</button>
+      <button class="tab-btn" data-tab="updates">Updates</button>
+      <button class="tab-btn" data-tab="discord">Discord</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HOME -->
+  <section id="panel-home" class="panel active">
+    <div class="hero">
+      <div class="kicker">BLACK · WHITE · GRAY — PRIVATE HUB</div>
+      <h1 class="title wave-text">APOLLOHUB</h1>
+      <p class="sub">Anti-raw links for Roblox: browsers only see a black screen that routes back Home — running via <b style="color:#fff">loadstring + game:HttpGet</b> still returns the full code. Blocks curl / python / view-source snoopers.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#link">Create Anti-Raw Link</a>
+        <a class="btn ghost" href="https://discord.gg/c3xVMnUUBv" target="_blank" rel="noopener">discord.gg/c3xVMnUUBv</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><span class="tag">CORE</span><h3>Real anti-raw</h3><p>The API inspects User-Agent + Sec-Fetch. Browsers get a black HTML page + redirect to <b>/#home</b>. Roblox (Roblox UA) + correct key gets <b>text/plain</b> Lua.</p></div>
+      <div class="card"><h3>Per-link key</h3><p>Every link carries its own <b>id + key</b> (64 chars). Without the key, even a spoofed Roblox UA only gets a harmless comment.</p></div>
+      <div class="card"><h3>Place lock / expiry</h3><p>Lock a link to a <b>PlaceId</b> and set an expiry time when creating it. Wrong game gets rejected.</p></div>
+    </div>
+
+    <div class="codebox">
+      <div class="code-head"><span>USAGE — LOADSTRING</span><button class="mini" data-copy="demo">Copy</button></div>
+      <pre id="code-demo">-- ApolloHub loader (replace the URL with your link from the Link tab)
+local hwid = (typeof(gethwid) == "function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())
+local url = "https://ApolloHub.vercel.app/api/r?id=apollo_xxxx&k=YOUR_KEY"
+  .. "&hwid=" .. tostring(hwid or "unknown"):gsub("[^%w%-%.:]", "")
+  .. "&place=" .. tostring(game.PlaceId)
+loadstring(game:HttpGet(url))()</pre>
+    </div>
+    <p class="hint" style="margin-top:12px">Tip: create a link in the <a href="#link" style="color:#fff">Link</a> tab, then swap the id + k into the loader above. The <code>/api/raw</code> route is a decoy — always black.</p>
+  </section>
+
+  <!-- LINK -->
+  <section id="panel-link" class="panel">
+    <div class="hero" style="padding:44px 0 10px">
+      <div class="kicker">CREATE · PROTECT · SHARE</div>
+      <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">CREATE LINK</h1>
+      <p class="sub">Paste Luau → get a <b style="color:#fff">/api/r?id=..&k=..</b> link + loader. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>.</p>
+    </div>
+
+    <div class="form">
+      <div><label>Script name</label><input id="f-name" placeholder="e.g. apollo_main"></div>
+      <div><label>Luau source (only the server ever sees it — browsers never do)</label><textarea id="f-code" placeholder='print("[ApolloHub] hello")'></textarea></div>
+      <div class="row2">
+        <div><label>Lock PlaceId (optional)</label><input id="f-place" placeholder="e.g. 123456789 — empty = every game"></div>
+        <div><label>Expire after (hours, 0 = forever)</label><input id="f-exp" type="number" min="0" value="0"></div>
+      </div>
+      <div><label>Admin key (if you set ADMIN_KEY on Vercel)</label><input id="f-admin" placeholder="empty if not set"></div>
+      <div><button class="btn primary" id="btn-create">Create Anti-Raw Link</button>
+      <span class="hint" id="create-status"></span></div>
+    </div>
+
+    <div class="result" id="result">
+      <h4>Done — keep this key safe</h4>
+      <div><label>API URL (paste into loader)</label><input id="r-url" readonly></div>
+      <div style="margin-top:10px"><label>Loader</label><textarea id="r-loader" readonly style="min-height:110px"></textarea></div>
+      <div class="cta-row" style="justify-content:flex-start;margin-top:12px">
+        <button class="mini" id="btn-copy-url">Copy URL</button>
+        <button class="mini" id="btn-copy-loader">Copy Loader</button>
+        <button class="mini" id="btn-test">Open test (returns Home)</button>
+      </div>
+      <p class="hint">The “Open test” button opens the URL in a browser → you will see black, then Home. That is correct. Only Roblox + key receives code.</p>
+    </div>
+
+    <div class="codebox">
+      <div class="code-head"><span>CREATED LINKS (<span id="link-count">0</span>)</span><button class="mini" id="btn-reload">Reload</button></div>
+      <pre id="link-list">Loading...</pre>
+    </div>
+  </section>
+
+  <!-- UPDATES -->
+  <section id="panel-updates" class="panel">
+    <div class="hero" style="padding:44px 0 10px">
+      <div class="kicker">CHANGELOG</div>
+      <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">UPDATES</h1>
+    </div>
+    <div class="timeline">
+      <div class="t-item"><b>v2.0 — ApolloHub anti-raw</b><span>2026-09-23</span><p>New 4-tab site, /api/r + /api/payload UA + key checks, browsers auto-return to #home, self-serve Link tab, PlaceId lock + expiry.</p></div>
+      <div class="t-item"><b>v1.2 — HWID loader</b><span>earlier</span><p>Loader sends hwid + place in sodium v2 format for server approval.</p></div>
+      <div class="t-item"><b>v1.0 — Launch</b><span>earlier</span><p>Black/white/gray hub, Discord discord.gg/c3xVMnUUBv.</p></div>
+    </div>
+  </section>
+
+  <!-- DISCORD -->
+  <section id="panel-discord" class="panel">
+    <div class="hero" style="padding:44px 0 10px">
+      <div class="kicker">COMMUNITY</div>
+      <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">DISCORD</h1>
+      <p class="sub">Support, keys, script bug reports — join the official server.</p>
+    </div>
+    <div class="discord-card">
+      <div class="kicker">OFFICIAL SERVER</div>
+      <div class="invite"><code>discord.gg/c3xVMnUUBv</code></div>
+      <div class="cta-row">
+        <a class="btn primary" href="https://discord.gg/c3xVMnUUBv" target="_blank" rel="noopener">Join Discord</a>
+        <button class="btn ghost" id="btn-copy-dc">Copy Invite</button>
+      </div>
+      <p class="hint" style="margin-top:16px">Rules: no source leaks, no raw-link spam, no public key sharing.</p>
+    </div>
+  </section>
+
+  <footer>© 2026 APOLLOHUB · BLACK / WHITE / GRAY · <a href="https://discord.gg/c3xVMnUUBv" target="_blank" rel="noopener">discord.gg/c3xVMnUUBv</a></footer>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
