@@ -3,6 +3,7 @@
 
 const { clientKind, sendBlank, sendLua, safeEqual, buildPayloadLoader, getHost } = require('../lib/detect');
 const { getScript } = require('../lib/store');
+const { verifyKey } = require('../lib/sonstudio');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -40,7 +41,11 @@ module.exports = async function handler(req, res) {
   if (kind === 'browser') return sendBlank(res);
 
   // Sai key -> khong dua gi (ke ca loader, vi loader chua key that).
-  if (!safeEqual(k, entry.k)) return sendLua(res, '-- [ApolloHub] invalid key');
+  // SonStudio gate: neu gan sonSlug thi key = key user ben SonStudio (thay cho k noi bo).
+  if (entry.sonSlug) {
+    const v = await verifyKey({ gameSlug: entry.sonSlug, key: k, hwid: q.hwid, placeId: q.place });
+    if (!v.ok) return sendLua(res, '-- [ApolloHub] key rejected: ' + v.msg);
+  } else if (!safeEqual(k, entry.k)) return sendLua(res, '-- [ApolloHub] invalid key');
 
   // Game that -> source goc. Fetcher (.get/curl) -> source loader gon.
   if (kind === 'roblox') return sendLua(res, entry.code);

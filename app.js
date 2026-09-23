@@ -127,7 +127,7 @@
   el('btn-add-new').addEventListener('click', () => {
     editingId = null;
     el('f-name').value = ''; el('f-slug').value = ''; el('f-code').value = '';
-    el('f-place').value = ''; el('f-exp').value = '0';
+    el('f-place').value = ''; el('f-exp').value = '0'; el('f-son').value = '';
     el('f-slug').disabled = false;
     syncCreateBtn(); createMsg('');
     el('result').classList.remove('show');
@@ -158,7 +158,7 @@
       const b = document.createElement('b');
       b.textContent = s.name || '(untitled)';
       const code = document.createElement('code');
-      code.textContent = 's=' + (s.slug || '-');
+      code.textContent = 's=' + (s.slug || '-') + (s.sonSlug ? ' · son:' + s.sonSlug : '');
       const meta = document.createElement('span');
       meta.className = 'meta';
       meta.textContent = (s.owner ? s.owner + ' · ' : '') + new Date(s.createdAt || Date.now()).toLocaleString();
@@ -196,17 +196,18 @@
     const code = el('f-code').value;
     const placeLock = el('f-place').value.trim();
     const expireHours = Number(el('f-exp').value || 0);
+    const sonSlug = el('f-son').value.trim();
     if (!code.trim()) { createMsg('Paste your code first'); return; }
     createMsg(editingId ? 'Saving...' : 'Creating...');
     if (editingId) {
-      const r = await api('/api/scripts?id=' + encodeURIComponent(editingId), 'PUT', { name, code, placeLock, expireHours });
+      const r = await api('/api/scripts?id=' + encodeURIComponent(editingId), 'PUT', { name, code, placeLock, expireHours, sonSlug });
       if (!r.ok) { createMsg(r.data.error || 'Save failed'); return; }
       createMsg('Saved. Game loads the new source immediately.');
       editingId = null; el('f-slug').disabled = false; syncCreateBtn();
       loadManaged();
       return;
     }
-    const r = await api('/api/scripts', 'POST', { name, slug, code, placeLock, expireHours });
+    const r = await api('/api/scripts', 'POST', { name, slug, code, placeLock, expireHours, sonSlug });
     if (!r.ok) { createMsg(r.data.error || 'Create failed'); return; }
     el('r-slug').value = r.data.slug;
     el('r-url').value = r.data.rawUrl || r.data.payloadUrl;
@@ -238,7 +239,9 @@
     mk('Edit', () => startEdit(s.id));
     mk('Loader', () => {
       const host = location.host;
-      const loader = 'loadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '.lua"))()';
+      const loader = s.sonSlug
+        ? 'local _KEY = "PASTE-YOUR-KEY-HERE"\nloadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '.lua?key=" .. _KEY))()'
+        : 'loadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '.lua"))()';
       el('r-slug').value = s.slug;
       el('r-url').value = 'https://' + host + '/raw/' + encodeURIComponent(s.slug) + '.lua';
       el('r-loader').value = loader;
@@ -264,6 +267,7 @@
     el('f-slug').value = s.slug || '';
     el('f-slug').disabled = true;
     el('f-code').value = s.code || '';
+    el('f-son').value = s.sonSlug || '';
     el('f-place').value = s.owner !== undefined && s.placeLock ? s.placeLock : (s.placeLock || '');
     syncCreateBtn(); createMsg('Editing [' + (s.slug || s.id) + '] — slug cannot change.');
     el('editor').style.display = '';

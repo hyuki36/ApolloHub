@@ -76,6 +76,10 @@ Con bot review đã xóa. Thay vào đó, GitHub Actions ping web mỗi 5 phút 
 - Chỉ owner login (`ahba9912@gmail.com`), không có đăng ký công khai — không ai chiếm slug, không lỗi auth linh tinh.
 - Muốn mở multi-user sau này: set `ALLOW_REGISTER=true` trên Vercel.
 
+## 3d. Sơn Studio key gate (không cần setup)
+
+Mỗi script gắn thêm `game_slug` bên Sơn Studio (ô mới trong dashboard) thì loader có chỗ điền key, game phải có **key hợp lệ + đúng HWID** mới load được source. Không gắn thì giữ nguyên keyless. Endpoint check của họ public nên không cần secret nào.
+
 ## 4. Domain riêng (vd: apollohub.gg, choi.vn...)
 
 Bạn hỏi “domain riêng” — có 2 loại:

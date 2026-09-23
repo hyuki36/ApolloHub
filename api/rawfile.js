@@ -1,9 +1,9 @@
-// GET /raw/:slug[.lua][/ :key] — raw giong GitHub, KHONG can key.
-// Browser mo -> NOT AUTHORIZED + ve #home, khong xem duoc source.
-// Fetcher (.get/curl) -> loader 1 dong (load trong game van ra source goc).
-// Game (Roblox UA) -> SOURCE GOC.
+// GET /raw/:slug[.lua][?key=USERKEY] — raw giong GitHub.
+// Mac dinh KHONG can key. Neu script gan sonSlug (game_slug SonStudio)
+// thi user phai dua ?key=<key SonStudio> hop le moi duoc phuc vu.
 const { clientKind, sendBlank, sendLua, buildRawLoader, getHost } = require('../lib/detect');
 const { getScript } = require('../lib/store');
+const { verifyKey } = require('../lib/sonstudio');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -30,7 +30,11 @@ module.exports = async function handler(req, res) {
     return sendLua(res, '-- [ApolloHub] wrong game');
   }
   if (kind === 'browser') return sendBlank(res);
-  // Khong can key: game that -> source goc, fetcher -> loader 1 dong.
+  // SonStudio gate: chi kich hoat khi script gan sonSlug.
+  if (entry.sonSlug) {
+    const v = await verifyKey({ gameSlug: entry.sonSlug, key: q.key || q.k, hwid: q.hwid, placeId: q.place });
+    if (!v.ok) return sendLua(res, '-- [ApolloHub] key rejected: ' + v.msg);
+  }
   if (kind === 'roblox') return sendLua(res, entry.code);
   return sendLua(res, buildRawLoader(getHost(req), entry));
 };

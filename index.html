@@ -94,6 +94,7 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main.lua"))(
         <div><label>Lock PlaceId (optional)</label><input id="f-place" placeholder="e.g. 123456789 — empty = every game"></div>
         <div><label>Expire after (hours, 0 = forever)</label><input id="f-exp" type="number" min="0" value="0"></div>
       </div>
+      <div><label>Son Studio game slug (optional — key gate)</label><input id="f-son" placeholder="e.g. blox-fruits — empty = no key needed"></div>
       <div><button class="btn primary" id="btn-create">Create Anti-Raw Link</button>
       <button class="btn ghost" id="btn-cancel-edit" style="display:none">Cancel edit</button>
       <span class="hint" id="create-status"></span></div>
@@ -126,6 +127,7 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main.lua"))(
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.7 — Son Studio key gate</b><span>2026-09-23</span><p>Optional game_slug per script: players need a valid Son Studio key (HWID-checked) to load. No setup, no secrets.</p></div>
       <div class="t-item"><b>v3.6 — Keyless raw files</b><span>2026-09-23</span><p>/raw/name.lua with no key. Browser blocked, bots get loader, game gets source. Keyed API kept.</p></div>
       <div class="t-item"><b>v3.5 — Single-user</b><span>2026-09-23</span><p>Public registration closed. Owner login only, zero auth errors, nobody can squat slugs.</p></div>
       <div class="t-item"><b>v3.4 — GitHub-style raw</b><span>2026-09-23</span><p>Raw links look like GitHub: /raw/slug/key, 1-line loader. Same 3-tier protection everywhere.</p></div>
