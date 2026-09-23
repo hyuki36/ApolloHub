@@ -88,7 +88,6 @@
     el('auth-box').style.display = logged ? 'none' : '';
     el('account-bar').style.display = logged ? '' : 'none';
     el('storage').style.display = logged ? '' : 'none';
-    el('publish-box').style.display = logged && me.owner ? '' : 'none';
     el('account-chip').textContent = logged ? me.email.split('@')[0] : 'Login';
     if (logged) {
       el('account-label').textContent = 'SIGNED IN AS ' + me.email.toUpperCase() + (me.owner ? ' · OWNER' : '');
@@ -128,7 +127,61 @@
     renderAuth();
   });
 
-  // ---------- Scripts Storage ----------
+  // ---------- Dashboard ----------
+  let cache = [];
+
+  el('btn-add-new').addEventListener('click', () => {
+    editingId = null;
+    el('f-name').value = ''; el('f-slug').value = ''; el('f-code').value = '';
+    el('f-place').value = ''; el('f-exp').value = '0';
+    el('f-slug').disabled = false;
+    syncCreateBtn(); createMsg('');
+    el('result').classList.remove('show');
+    el('editor').style.display = '';
+    el('f-name').focus();
+    el('editor').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  function hideEditor() { el('editor').style.display = 'none'; }
+
+  el('q-search').addEventListener('input', () => renderList(el('q-search').value));
+
+  function renderList(filter) {
+    const box = el('script-list');
+    const f = String(filter || '').trim().toLowerCase();
+    const items = cache.filter((s) => !f
+      || String(s.name || '').toLowerCase().includes(f)
+      || String(s.slug || '').toLowerCase().includes(f));
+    el('link-count').textContent = items.length;
+    box.innerHTML = '';
+    if (!items.length) {
+      box.innerHTML = '<p class="hint">' + (cache.length ? 'No match.' : 'Add New Scripts First. . .') + '</p>';
+      return;
+    }
+    items.forEach((s) => {
+      const row = document.createElement('div');
+      row.className = 'script-row';
+      const b = document.createElement('b');
+      b.textContent = s.name || '(untitled)';
+      const code = document.createElement('code');
+      code.textContent = 's=' + (s.slug || '-');
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = (s.owner ? s.owner + ' · ' : '') + new Date(s.createdAt || Date.now()).toLocaleString();
+      const sp = document.createElement('span');
+      sp.className = 'sp';
+      row.appendChild(b); row.appendChild(code); row.appendChild(meta); row.appendChild(sp);
+      if (me.owner && s.owner && s.owner !== me.email) {
+        const badge = document.createElement('span');
+        badge.className = 'badge-owner';
+        badge.textContent = 'USER SCRIPT';
+        row.appendChild(badge);
+      }
+      row.appendChild(rowButtons(s));
+      box.appendChild(row);
+    });
+  }
+
   function syncCreateBtn() {
     el('btn-create').textContent = editingId ? 'Save Changes' : 'Create Anti-Raw Link';
     el('btn-cancel-edit').style.display = editingId ? '' : 'none';
@@ -140,6 +193,7 @@
     el('f-name').value = ''; el('f-slug').value = ''; el('f-code').value = '';
     el('f-slug').disabled = false;
     syncCreateBtn(); createMsg('');
+    hideEditor();
   });
 
   el('btn-create').addEventListener('click', async () => {
@@ -164,7 +218,8 @@
     el('r-url').value = r.data.payloadUrl;
     el('r-loader').value = r.data.payloadLoader;
     el('result').classList.add('show');
-    createMsg(r.data.persisted ? 'Saved permanently: ' + r.data.slug : 'Saved — press Publish below to keep it forever');
+    createMsg('Saved: ' + r.data.slug + (r.data.persisted ? ' (permanent)' : ' (runs now)'));
+    hideEditor();
     loadManaged();
   });
 
@@ -174,19 +229,6 @@
     if (el('r-url').value) window.open(el('r-url').value, '_blank');
   });
   el('btn-reload').addEventListener('click', loadManaged);
-
-  el('btn-export').addEventListener('click', async () => {
-    el('export-status').textContent = 'Preparing...';
-    const r = await api('/api/scripts?export=1');
-    if (!r.ok) { el('export-status').textContent = r.data.error || 'Export failed'; return; }
-    const blob = new Blob([JSON.stringify(r.data.file, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'scripts.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-    el('export-status').textContent = 'Downloaded — upload it to the repo, done.';
-  });
 
   function rowButtons(s) {
     const wrap = document.createElement('span');
@@ -231,7 +273,8 @@
     el('f-code').value = s.code || '';
     el('f-place').value = s.owner !== undefined && s.placeLock ? s.placeLock : (s.placeLock || '');
     syncCreateBtn(); createMsg('Editing [' + (s.slug || s.id) + '] — slug cannot change.');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    el('editor').style.display = '';
+    el('editor').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   async function loadManaged() {
@@ -240,35 +283,8 @@
     box.innerHTML = '<p class="hint">Loading...</p>';
     const r = await api('/api/scripts');
     if (!r.ok) { box.innerHTML = '<p class="hint">Could not load. ' + (r.data.error || '') + '</p>'; return; }
-    const items = r.data.scripts || [];
-    el('link-count').textContent = items.length;
-    box.innerHTML = '';
-    if (!items.length) {
-      box.innerHTML = '<p class="hint">No scripts yet — create your first one in the form above.</p>';
-      return;
-    }
-    items.forEach((s) => {
-      const row = document.createElement('div');
-      row.className = 'script-row';
-      const b = document.createElement('b');
-      b.textContent = s.name || '(untitled)';
-      const code = document.createElement('code');
-      code.textContent = 's=' + (s.slug || '-');
-      const meta = document.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = (s.owner ? s.owner + ' · ' : '') + new Date(s.createdAt || Date.now()).toLocaleString();
-      const sp = document.createElement('span');
-      sp.className = 'sp';
-      row.appendChild(b); row.appendChild(code); row.appendChild(meta); row.appendChild(sp);
-      if (me.owner && s.owner && s.owner !== me.email) {
-        const badge = document.createElement('span');
-        badge.className = 'badge-owner';
-        badge.textContent = 'USER SCRIPT';
-        row.appendChild(badge);
-      }
-      row.appendChild(rowButtons(s));
-      box.appendChild(row);
-    });
+    cache = r.data.scripts || [];
+    renderList(el('q-search').value);
   }
 
   refreshMe();

@@ -88,7 +88,12 @@ loadstring(game:HttpGet(_u))()</pre>
     </div>
 
     <div id="storage" style="display:none">
-    <div class="form">
+      <div class="dash-bar">
+        <input id="q-search" placeholder="Search Your Scripts...">
+        <button class="btn primary" id="btn-add-new">Add New Link</button>
+      </div>
+
+      <div class="form" id="editor" style="display:none">
       <div><label>Script name</label><input id="f-name" placeholder="e.g. Apollo Main"></div>
       <div><label>Script Key (s=) — unique per script</label><input id="f-slug" placeholder="e.g. apollo_main — empty = auto from name"></div>
       <div><label>Luau source (only the server ever sees it — browsers never do)</label><textarea id="f-code" placeholder='print("[ApolloHub] hello")'></textarea></div>
@@ -99,7 +104,7 @@ loadstring(game:HttpGet(_u))()</pre>
       <div><button class="btn primary" id="btn-create">Create Anti-Raw Link</button>
       <button class="btn ghost" id="btn-cancel-edit" style="display:none">Cancel edit</button>
       <span class="hint" id="create-status"></span></div>
-    </div>
+      </div>
 
     <div class="result" id="result">
       <h4>Done — keep this key safe</h4>
@@ -116,14 +121,7 @@ loadstring(game:HttpGet(_u))()</pre>
 
     <div class="codebox">
       <div class="code-head"><span><span id="script-list-title">MY SCRIPTS</span> (<span id="link-count">0</span>)</span><button class="mini" id="btn-reload">Reload</button></div>
-      <div id="script-list" style="padding:12px;display:grid;gap:8px"><p class="hint">Login to see your scripts.</p></div>
-    </div>
-
-    <div class="form" id="publish-box" style="display:none">
-      <div><label>Publish — keep forever, no token needed</label></div>
-      <p class="hint">1. Press <b style="color:#fff">Download scripts.json</b>.<br>2. Open <a href="https://github.com/hyuki36/ApolloHub/upload/main" target="_blank" rel="noopener" style="color:#fff">repo upload page</a>, drop the file in, Commit changes.<br>3. Vercel redeploys by itself. Done — permanent.</p>
-      <div><button class="btn primary" id="btn-export">Download scripts.json</button>
-      <span class="hint" id="export-status"></span></div>
+      <div id="script-list" style="padding:12px;display:grid;gap:8px"><p class="hint">Add New Scripts First. . .</p></div>
     </div>
     </div>
   </section>
@@ -135,6 +133,7 @@ loadstring(game:HttpGet(_u))()</pre>
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.1 — Dashboard + Luarmor-style deny</b><span>2026-09-23</span><p>Link tab is a dashboard: search, Add New Link, script frame. Browser hits get a monochrome NOT AUTHORIZED page then return #home. Bots/curl get the loader only, game gets the original source.</p></div>
       <div class="t-item"><b>v3.0 — Scripts Storage + accounts</b><span>2026-09-23</span><p>Login/register, each user manages their own scripts and sources, owner (ahba9912@gmail.com) controls everything, 3-tier anti-raw kept: browser black, bots get loader, game gets original source.</p></div>
       <div class="t-item"><b>v2.0 — ApolloHub anti-raw</b><span>2026-09-23</span><p>New 4-tab site, /api/r + /api/payload UA + key checks, browsers auto-return to #home, self-serve Link tab, PlaceId lock + expiry.</p></div>
       <div class="t-item"><b>v1.2 — HWID loader</b><span>earlier</span><p>Loader sends hwid + place in sodium v2 format for server approval.</p></div>

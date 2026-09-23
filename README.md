@@ -65,11 +65,7 @@ Vercel → Project → **Settings → Environment Variables**:
 
 ## 3b. Publish vĩnh viễn KHÔNG cần token
 
-Repo `scripts.json` là sự thật vĩnh viễn, server chỉ là bộ nhớ chạy:
-
-1. Login owner → tab Link → **Download scripts.json** (file đầy đủ, gồm mọi script).
-2. Mở [trang upload repo](https://github.com/hyuki36/ApolloHub/upload/main), thả file vào, Commit changes.
-3. Vercel tự redeploy. Xong — link sống vĩnh viễn, đúng source gốc.
+Repo `scripts.json` là sự thật vĩnh viễn, server chỉ là bộ nhớ chạy. Cách giữ script vĩnh viễn: gom entries đã tạo thành file `scripts.json` đầy đủ rồi upload đè lên repo (trang upload của repo → Commit changes). Vercel tự redeploy. Xong.
 
 ## 3b. Scripts Storage + tài khoản (mới)
 
