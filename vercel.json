@@ -1,4 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["sin1"]
+  "regions": ["sin1"],
+  "rewrites": [
+    { "source": "/raw/:slug/:key", "destination": "/api/rawfile?slug=:slug&key=:key" },
+    { "source": "/raw/:slug", "destination": "/api/rawfile?slug=:slug" }
+  ]
 }

@@ -8,7 +8,7 @@
 
 const { getViewer } = require('../lib/auth');
 const { getScript, getAllEntries, saveScript, updateScript, deleteScript, newId, newKey, cleanSlug, slugTaken } = require('../lib/store');
-const { buildPayloadLoader } = require('../lib/detect');
+const { buildPayloadLoader, buildRawLoader } = require('../lib/detect');
 
 function parseBody(req) {
   let b = req.body;
@@ -77,6 +77,8 @@ module.exports = async function handler(req, res) {
       url: baseUrl(req) + '/api/r?id=' + encodeURIComponent(entry.id) + '&k=' + encodeURIComponent(entry.k),
       payloadUrl: baseUrl(req) + '/api/payload?s=' + encodeURIComponent(slug) + '&k=' + encodeURIComponent(entry.k),
       payloadLoader: buildPayloadLoader(host, entry),
+      rawUrl: baseUrl(req) + '/raw/' + encodeURIComponent(slug) + '/' + encodeURIComponent(entry.k),
+      rawLoader: buildRawLoader(host, entry),
       persisted: Boolean(entry.persisted)
     });
   }

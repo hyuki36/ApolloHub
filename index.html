@@ -51,16 +51,10 @@
 
     <div class="codebox">
       <div class="code-head"><span>USAGE — LOADSTRING</span><button class="mini" data-copy="demo">Copy</button></div>
-      <pre id="code-demo">-- ApolloHub loader (get your Script Key + key in the Link tab)
-local _s = "apollo_main"
-local _k = "YOUR_KEY"
-local _h = (typeof(gethwid) == "function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())
-local _u = ("https://apollohub-nu.vercel.app/api/payload?s=" .. _s .. "&k=" .. _k
-  .. "&hwid=" .. tostring(_h or "unknown"):gsub("[^%w%-%.:]", "")
-  .. "&place=" .. tostring(game.PlaceId))
-loadstring(game:HttpGet(_u))()</pre>
+      <pre id="code-demo">-- ApolloHub raw (GitHub-style, 1 line)
+loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main/YOUR_KEY"))()</pre>
     </div>
-    <p class="hint" style="margin-top:12px">Tip: create a link in the <a href="#link" style="color:#fff">Link</a> tab, then swap the id + k into the loader above. The <code>/api/raw</code> route is a decoy — always black.</p>
+    <p class="hint" style="margin-top:12px">Tip: create a link in the <a href="#link" style="color:#fff">Link</a> tab and use its 1-line raw loader. The <code>/api/raw</code> route is a decoy — always blocked.</p>
   </section>
 
   <!-- LINK -->
@@ -68,7 +62,7 @@ loadstring(game:HttpGet(_u))()</pre>
     <div class="hero" style="padding:28px 0 8px">
       <div class="kicker">CREATE · PROTECT · SHARE</div>
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">CREATE LINK</h1>
-      <p class="sub">Paste Luau → each script gets its own <b style="color:#fff">Script Key (s=)</b> + key. Loader calls <b style="color:#fff">/api/payload?s=KEY&k=..</b> so it never loads the wrong script. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>. Login to use your Scripts Storage.</p>
+      <p class="sub">Paste Luau → each script gets its own raw link <b style="color:#fff">/raw/KEY/k..</b> GitHub-style. Browsers get blocked, bots get the loader, the game gets the original source. Login to use your Scripts Storage.</p>
     </div>
 
     <div class="form" id="auth-box">
@@ -116,7 +110,7 @@ loadstring(game:HttpGet(_u))()</pre>
         <button class="mini" id="btn-copy-loader">Copy Loader</button>
         <button class="mini" id="btn-test">Open test (returns Home)</button>
       </div>
-      <p class="hint">“Open test” opens the URL in a browser → black, then Home. Bots/curl receive the loader snippet. Only the game receives the original source.</p>
+      <p class="hint">“Open test” opens the URL in a browser → blocked, then Home. Bots/curl receive the 1-line loader. Only the game receives the original source.</p>
     </div>
 
     <div class="codebox">
@@ -133,6 +127,7 @@ loadstring(game:HttpGet(_u))()</pre>
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.4 — GitHub-style raw</b><span>2026-09-23</span><p>Raw links look like GitHub: /raw/slug/key, 1-line loader. Same 3-tier protection everywhere.</p></div>
       <div class="t-item"><b>v3.3 — No bot, keep-alive storage</b><span>2026-09-23</span><p>Review bot removed. Web storage stays alive via 5-minute ping. Raw links live on the web, browsers get NOT AUTHORIZED then #home.</p></div>
       <div class="t-item"><b>v3.2 — Review bot</b><span>2026-09-23</span><p>Hidden bot auto-approves scripts every 10 minutes: scans, merges into scripts.json, commits. No setup needed.</p></div>
       <div class="t-item"><b>v3.1 — Dashboard + Luarmor-style deny</b><span>2026-09-23</span><p>Link tab is a dashboard: search, Add New Link, script frame. Browser hits get a monochrome NOT AUTHORIZED page then return #home. Bots/curl get the loader only, game gets the original source.</p></div>

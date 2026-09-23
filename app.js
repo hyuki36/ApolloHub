@@ -221,8 +221,8 @@
     const r = await api('/api/scripts', 'POST', { name, slug, code, placeLock, expireHours });
     if (!r.ok) { createMsg(r.data.error || 'Create failed'); return; }
     el('r-slug').value = r.data.slug;
-    el('r-url').value = r.data.payloadUrl;
-    el('r-loader').value = r.data.payloadLoader;
+    el('r-url').value = r.data.rawUrl || r.data.payloadUrl;
+    el('r-loader').value = r.data.rawLoader || r.data.payloadLoader;
     el('result').classList.add('show');
     createMsg('Saved: ' + r.data.slug + (r.data.persisted ? ' (permanent)' : ' (runs now)'));
     hideEditor();
@@ -248,12 +248,9 @@
     mk('Edit', () => startEdit(s.id));
     mk('Loader', () => {
       const host = location.host;
-      const loader = "-- ApolloHub [" + s.slug + "]\nlocal _s='" + s.slug + "'\nlocal _k=\"" + s.k + "\"\n"
-        + "local _h=(typeof(gethwid)==\"function\" and gethwid() or game:GetService(\"RbxAnalyticsService\"):GetClientId())\n"
-        + "local _u=(\"https://" + host + "/api/payload?s=\".._s..\"&k=\".._k..\"&hwid=\"..tostring(_h or \"unknown\"):gsub(\"[^%w%-%.:]\",\"\")..\"&place=\"..tostring(game.PlaceId))\n"
-        + "loadstring(game:HttpGet(_u))()";
+      const loader = 'loadstring(game:HttpGet("https://' + host + '/raw/' + s.slug + '/' + s.k + '"))()';
       el('r-slug').value = s.slug;
-      el('r-url').value = 'https://' + host + '/api/payload?s=' + encodeURIComponent(s.slug) + '&k=' + encodeURIComponent(s.k);
+      el('r-url').value = 'https://' + host + '/raw/' + encodeURIComponent(s.slug) + '/' + encodeURIComponent(s.k);
       el('r-loader').value = loader;
       el('result').classList.add('show');
       el('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
