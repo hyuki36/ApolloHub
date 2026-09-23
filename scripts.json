@@ -19,6 +19,16 @@
       "createdAt": 1790134500000,
       "placeLock": null,
       "expiresAt": null
+    },
+    {
+      "id": "apollo_nigeria",
+      "slug": "nigeria",
+      "k": "nokey",
+      "name": "nigeria",
+      "code": "print(\"nigeria\")\n",
+      "createdAt": 1790170000000,
+      "placeLock": null,
+      "expiresAt": null
     }
   ]
 }
