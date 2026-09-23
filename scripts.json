@@ -2,6 +2,7 @@
   "scripts": [
     {
       "id": "apollo_demo",
+      "slug": "demo",
       "k": "demo.please-change-me",
       "name": "demo",
       "code": "-- [ApolloHub] demo script — doi code nay trong scripts.json hoac tao link moi o tab Link\nlocal g = game\nprint(\"[ApolloHub] loaded: \" .. tostring(g.PlaceId))\n",

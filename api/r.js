@@ -1,4 +1,4 @@
-// GET /api/r?id=<id>&k=<key>&hwid=<hwid>&place=<placeId>
+// GET /api/r?id=<id|slug>&k=<key>&hwid=<hwid>&place=<placeId>
 // - Trinh duyet / tool (curl, python...): tra trang den + tu chuyen ve /#home, khong lo source.
 // - Roblox / executor (game:HttpGet) + key dung: tra Lua text/plain de loadstring chay.
 
@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   }
 
   const q = req.query || {};
-  const id = String(q.id || q.s || '');
+  const id = String(q.id || q.s || q.slug || '');
   const k = String(q.k || q.key || '');
 
   // Khong co id -> gia vo nhu web chet, khong lo gi.

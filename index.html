@@ -50,12 +50,14 @@
 
     <div class="codebox">
       <div class="code-head"><span>USAGE — LOADSTRING</span><button class="mini" data-copy="demo">Copy</button></div>
-      <pre id="code-demo">-- ApolloHub loader (replace the URL with your link from the Link tab)
-local hwid = (typeof(gethwid) == "function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())
-local url = "https://apollohub-nu.vercel.app/api/r?id=apollo_xxxx&k=YOUR_KEY"
-  .. "&hwid=" .. tostring(hwid or "unknown"):gsub("[^%w%-%.:]", "")
-  .. "&place=" .. tostring(game.PlaceId)
-loadstring(game:HttpGet(url))()</pre>
+      <pre id="code-demo">-- ApolloHub loader (get your Script Key + key in the Link tab)
+local _s = "apollo_main"
+local _k = "YOUR_KEY"
+local _h = (typeof(gethwid) == "function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())
+local _u = ("https://apollohub-nu.vercel.app/api/payload?s=" .. _s .. "&k=" .. _k
+  .. "&hwid=" .. tostring(_h or "unknown"):gsub("[^%w%-%.:]", "")
+  .. "&place=" .. tostring(game.PlaceId))
+loadstring(game:HttpGet(_u))()</pre>
     </div>
     <p class="hint" style="margin-top:12px">Tip: create a link in the <a href="#link" style="color:#fff">Link</a> tab, then swap the id + k into the loader above. The <code>/api/raw</code> route is a decoy — always black.</p>
   </section>
@@ -65,11 +67,12 @@ loadstring(game:HttpGet(url))()</pre>
     <div class="hero" style="padding:44px 0 10px">
       <div class="kicker">CREATE · PROTECT · SHARE</div>
       <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">CREATE LINK</h1>
-      <p class="sub">Paste Luau → get a <b style="color:#fff">/api/r?id=..&k=..</b> link + loader. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>.</p>
+      <p class="sub">Paste Luau → each script gets its own <b style="color:#fff">Script Key (s=)</b> + key. Loader calls <b style="color:#fff">/api/payload?s=KEY&k=..</b> so it never loads the wrong script. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>.</p>
     </div>
 
     <div class="form">
-      <div><label>Script name</label><input id="f-name" placeholder="e.g. apollo_main"></div>
+      <div><label>Script name</label><input id="f-name" placeholder="e.g. Apollo Main"></div>
+      <div><label>Script Key (s=) — unique per script</label><input id="f-slug" placeholder="e.g. apollo_main — empty = auto from name"></div>
       <div><label>Luau source (only the server ever sees it — browsers never do)</label><textarea id="f-code" placeholder='print("[ApolloHub] hello")'></textarea></div>
       <div class="row2">
         <div><label>Lock PlaceId (optional)</label><input id="f-place" placeholder="e.g. 123456789 — empty = every game"></div>
@@ -82,8 +85,9 @@ loadstring(game:HttpGet(url))()</pre>
 
     <div class="result" id="result">
       <h4>Done — keep this key safe</h4>
-      <div><label>API URL (paste into loader)</label><input id="r-url" readonly></div>
-      <div style="margin-top:10px"><label>Loader</label><textarea id="r-loader" readonly style="min-height:110px"></textarea></div>
+      <div><label>Script Key (s=)</label><input id="r-slug" readonly></div>
+      <div style="margin-top:10px"><label>Payload URL</label><input id="r-url" readonly></div>
+      <div style="margin-top:10px"><label>Loader — paste into executor</label><textarea id="r-loader" readonly style="min-height:130px"></textarea></div>
       <div class="cta-row" style="justify-content:flex-start;margin-top:12px">
         <button class="mini" id="btn-copy-url">Copy URL</button>
         <button class="mini" id="btn-copy-loader">Copy Loader</button>

@@ -49,6 +49,7 @@
   // create link
   el('btn-create').addEventListener('click', async () => {
     const name = el('f-name').value.trim() || 'apollo_main';
+    const slug = el('f-slug').value.trim();
     const code = el('f-code').value;
     const placeLock = el('f-place').value.trim();
     const expireHours = Number(el('f-exp').value || 0);
@@ -59,12 +60,13 @@
       const r = await fetch('/api/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
-        body: JSON.stringify({ name, code, placeLock, expireHours, adminKey })
+        body: JSON.stringify({ name, slug, code, placeLock, expireHours, adminKey })
       });
       const j = await r.json();
       if (!r.ok) { toast(j.error || 'Create failed'); return; }
-      el('r-url').value = j.url;
-      el('r-loader').value = j.loader;
+      el('r-slug').value = j.slug;
+      el('r-url').value = j.payloadUrl;
+      el('r-loader').value = j.payloadLoader;
       el('result').classList.add('show');
       toast('Created: ' + j.id);
       loadList();
@@ -87,7 +89,7 @@
       const items = j.scripts || [];
       el('link-count').textContent = items.length;
       box.textContent = items.length
-        ? items.map((s) => '• ' + s.name + '  |  ' + s.id + '  |  ' + new Date(s.createdAt || Date.now()).toLocaleString()).join('\n')
+        ? items.map((s) => '• ' + s.name + '  [s=' + (s.slug || '-') + ']  |  ' + s.id + '  |  ' + new Date(s.createdAt || Date.now()).toLocaleString()).join('\n')
         : 'No links yet — create your first one in the form above.';
     } catch (e) { box.textContent = 'Could not load the list.'; }
   }

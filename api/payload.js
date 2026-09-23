@@ -1,5 +1,5 @@
-// GET /api/payload?s=<id>&k=<key>&hwid=..&place=..
-// Tuong thich format sodium loader v2 cu, nhung chay bang store ApolloHub.
+// GET /api/payload?s=<slug|id>&k=<key>&hwid=..&place=..
+// Style sodium gon: moi script 1 Script Key (s=) + key (k=) rieng, khong load nham.
 const { isBrowser, sendBlank, sendLua, safeEqual } = require('../lib/detect');
 const { getScript } = require('../lib/store');
 
@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).send('Method Not Allowed');
   }
   const q = req.query || {};
-  const id = String(q.s || q.id || '');
+  const id = String(q.s || q.id || q.slug || '');
   const k = String(q.k || '');
   if (!id) return sendBlank(res);
 
