@@ -57,11 +57,20 @@ Vercel → Project → **Settings → Environment Variables**:
 
 | Key | Tác dụng |
 |---|---|
-| `ADMIN_KEY` | Ai cũng tạo link được nếu trống. Set 1 chuỗi bí mật thì tab Link phải nhập đúng key mới tạo được. |
-| `GITHUB_TOKEN` | **Bật lưu vĩnh viễn:** link bấm tạo trên web tự commit vào `scripts.json` → Vercel redeploy → sống vĩnh viễn, đúng source gốc, không bao giờ `invalid link`. Không set thì link chỉ sống tạm trên instance hiện tại. |
+| `ADMIN_KEY` | Khóa route `/api/create` cũ. Tab Link mới dùng login, không cần key này. |
+| `GITHUB_TOKEN` | **Bật lưu vĩnh viễn:** link + tài khoản tạo trên web tự commit vào repo → Vercel redeploy → sống vĩnh viễn. Không set thì chỉ sống tạm trên instance hiện tại. |
 | `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Cách khác để lưu vĩnh viễn (không cần redeploy). Có KV thì không cần `GITHUB_TOKEN`. |
+| `SESSION_SECRET` | Chuỗi bí mật ký session đăng nhập. **Nên set 1 chuỗi ngẫu nhiên dài** — không set thì dùng secret mặc định (chạy được nhưng kém an toàn, tất cả session mất hiệu lực khi đổi secret). |
+| `OWNER_EMAILS` | Mặc định `ahba9912@gmail.com`. Có thể thêm email khác cách nhau bằng dấu phẩy. |
 
 **Lấy `GITHUB_TOKEN` (2 phút, làm 1 lần):** GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → tick `repo` → copy → Vercel → Project → Settings → Environment Variables → Add `GITHUB_TOKEN` = token vừa copy (+ `GITHUB_REPO` = `hyuki36/ApolloHub` nếu repo khác) → Save → Redeploy 1 lần. Từ đó tab Link báo `Saved permanently` là link sống vĩnh viễn.
+
+## 3b. Scripts Storage + tài khoản (mới)
+
+- Tab **Link**: chưa login chỉ thấy form đăng nhập/đăng ký. Login xong mới tạo + quản lý scripts.
+- Mỗi user chỉ thấy/sửa/xóa **script của mình**. Slug (`s=`) không đổi được sau khi tạo để loader cũ không gãy.
+- **Owner** (`ahba9912@gmail.com`): thấy **tất cả** scripts + sources của mọi người, sửa/xóa được hết, có huy hiệu OWNER.
+- Game load (`/api/payload`, `/api/r`) không đổi: `s+k` đúng → source gốc trong storage.
 
 ## 4. Domain riêng (vd: apollohub.gg, choi.vn...)
 

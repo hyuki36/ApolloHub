@@ -25,6 +25,7 @@
       <button class="tab-btn" data-tab="updates">Updates</button>
       <button class="tab-btn" data-tab="discord">Discord</button>
     </nav>
+    <div class="acct"><button class="mini" id="account-chip">Login</button></div>
   </div>
 </header>
 
@@ -67,9 +68,25 @@ loadstring(game:HttpGet(_u))()</pre>
     <div class="hero" style="padding:44px 0 10px">
       <div class="kicker">CREATE · PROTECT · SHARE</div>
       <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">CREATE LINK</h1>
-      <p class="sub">Paste Luau → each script gets its own <b style="color:#fff">Script Key (s=)</b> + key. Loader calls <b style="color:#fff">/api/payload?s=KEY&k=..</b> so it never loads the wrong script. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>.</p>
+      <p class="sub">Paste Luau → each script gets its own <b style="color:#fff">Script Key (s=)</b> + key. Loader calls <b style="color:#fff">/api/payload?s=KEY&k=..</b> so it never loads the wrong script. Anyone opening the link in a browser is pushed back to <b style="color:#fff">#home</b>. Login to use your Scripts Storage.</p>
     </div>
 
+    <div class="form" id="auth-box">
+      <div><label>Scripts Storage — login / register</label></div>
+      <div class="row2">
+        <div><input id="a-email" type="email" placeholder="Email"></div>
+        <div><input id="a-pass" type="password" placeholder="Password (min 6)"></div>
+      </div>
+      <div><button class="btn primary" id="btn-login">Login</button>
+      <button class="btn ghost" id="btn-register">Register</button>
+      <span class="hint" id="auth-status"></span></div>
+    </div>
+
+    <div class="codebox" id="account-bar" style="display:none">
+      <div class="code-head"><span id="account-label">SIGNED IN</span><button class="mini" id="btn-logout">Logout</button></div>
+    </div>
+
+    <div id="storage" style="display:none">
     <div class="form">
       <div><label>Script name</label><input id="f-name" placeholder="e.g. Apollo Main"></div>
       <div><label>Script Key (s=) — unique per script</label><input id="f-slug" placeholder="e.g. apollo_main — empty = auto from name"></div>
@@ -78,8 +95,8 @@ loadstring(game:HttpGet(_u))()</pre>
         <div><label>Lock PlaceId (optional)</label><input id="f-place" placeholder="e.g. 123456789 — empty = every game"></div>
         <div><label>Expire after (hours, 0 = forever)</label><input id="f-exp" type="number" min="0" value="0"></div>
       </div>
-      <div><label>Admin key (if you set ADMIN_KEY on Vercel)</label><input id="f-admin" placeholder="empty if not set"></div>
       <div><button class="btn primary" id="btn-create">Create Anti-Raw Link</button>
+      <button class="btn ghost" id="btn-cancel-edit" style="display:none">Cancel edit</button>
       <span class="hint" id="create-status"></span></div>
     </div>
 
@@ -97,8 +114,9 @@ loadstring(game:HttpGet(_u))()</pre>
     </div>
 
     <div class="codebox">
-      <div class="code-head"><span>CREATED LINKS (<span id="link-count">0</span>)</span><button class="mini" id="btn-reload">Reload</button></div>
-      <pre id="link-list">Loading...</pre>
+      <div class="code-head"><span id="script-list-title">MY SCRIPTS (<span id="link-count">0</span>)</span><button class="mini" id="btn-reload">Reload</button></div>
+      <div id="script-list" style="padding:14px;display:grid;gap:10px"><p class="hint">Login to see your scripts.</p></div>
+    </div>
     </div>
   </section>
 
@@ -109,6 +127,7 @@ loadstring(game:HttpGet(_u))()</pre>
       <h1 class="title wave-text" style="font-size:clamp(32px,6vw,56px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.0 — Scripts Storage + accounts</b><span>2026-09-23</span><p>Login/register, each user manages their own scripts and sources, owner (ahba9912@gmail.com) controls everything, 3-tier anti-raw kept: browser black, bots get loader, game gets original source.</p></div>
       <div class="t-item"><b>v2.0 — ApolloHub anti-raw</b><span>2026-09-23</span><p>New 4-tab site, /api/r + /api/payload UA + key checks, browsers auto-return to #home, self-serve Link tab, PlaceId lock + expiry.</p></div>
       <div class="t-item"><b>v1.2 — HWID loader</b><span>earlier</span><p>Loader sends hwid + place in sodium v2 format for server approval.</p></div>
       <div class="t-item"><b>v1.0 — Launch</b><span>earlier</span><p>Black/white/gray hub, Discord discord.gg/c3xVMnUUBv.</p></div>
