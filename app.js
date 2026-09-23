@@ -212,7 +212,9 @@
     el('r-url').value = r.data.rawUrl || r.data.payloadUrl;
     el('r-loader').value = r.data.rawLoader || r.data.payloadLoader;
     el('result').classList.add('show');
-    createMsg('Saved: ' + r.data.slug + (r.data.persisted ? ' (permanent)' : ' (runs now)'));
+    createMsg('Saved: ' + r.data.slug + (r.data.persisted
+      ? ' (permanent)'
+      : ' (TEMPORARY — will NOT load in game. Send the code to owner to seed it permanently)'));
     hideEditor();
     loadManaged();
   });
