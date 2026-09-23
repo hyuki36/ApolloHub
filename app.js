@@ -99,7 +99,7 @@
       el('account-label').textContent = 'SIGNED IN AS ' + me.email.toUpperCase() + (me.owner ? ' · OWNER' : '');
       el('script-list-title').textContent = me.owner ? 'ALL SCRIPTS' : 'MY SCRIPTS';
     }
-    if (!logged) { editingId = null; syncCreateBtn(); }
+    if (!logged) { editingId = null; syncCreateBtn(); el('stats').style.display = 'none'; }
   }
 
   el('btn-login').addEventListener('click', async () => {
@@ -149,30 +149,69 @@
     el('link-count').textContent = items.length;
     box.innerHTML = '';
     if (!items.length) {
-      box.innerHTML = '<p class="hint">' + (cache.length ? 'No match.' : 'Add New Scripts First. . .') + '</p>';
+      box.innerHTML = '<tr><td colspan="5"><p class="hint">' + (cache.length ? 'No match.' : 'Add New Scripts First. . .') + '</p></td></tr>';
+      renderStats();
       return;
     }
     items.forEach((s) => {
-      const row = document.createElement('div');
-      row.className = 'script-row';
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
       const b = document.createElement('b');
       b.textContent = s.name || '(untitled)';
-      const code = document.createElement('code');
-      code.textContent = 's=' + (s.slug || '-') + (s.sonSlug ? ' · son:' + s.sonSlug : '');
-      const meta = document.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = (s.owner ? s.owner + ' · ' : '') + new Date(s.createdAt || Date.now()).toLocaleString();
-      const sp = document.createElement('span');
-      sp.className = 'sp';
-      row.appendChild(b); row.appendChild(code); row.appendChild(meta); row.appendChild(sp);
+      tdName.appendChild(b);
       if (me.owner && s.owner && s.owner !== me.email) {
         const badge = document.createElement('span');
         badge.className = 'badge-owner';
-        badge.textContent = 'USER SCRIPT';
-        row.appendChild(badge);
+        badge.textContent = 'USER';
+        tdName.appendChild(document.createTextNode(' '));
+        tdName.appendChild(badge);
       }
-      row.appendChild(rowButtons(s));
-      box.appendChild(row);
+      const tdKey = document.createElement('td');
+      const code = document.createElement('code');
+      code.textContent = 's=' + (s.slug || '-');
+      tdKey.appendChild(code);
+      const tdType = document.createElement('td');
+      const chips = [];
+      if (s.sonSlug) chips.push(['SON', true]);
+      if (s.placeLock) chips.push(['LOCK', false]);
+      if (s.expiresAt) chips.push(['EXP', false]);
+      if (!chips.length) chips.push(['RAW', false]);
+      chips.forEach(([label, hot]) => {
+        const c = document.createElement('span');
+        c.className = 'chip' + (hot ? ' hot' : '');
+        c.textContent = label;
+        tdType.appendChild(c);
+      });
+      const tdUpd = document.createElement('td');
+      tdUpd.className = 'meta';
+      tdUpd.textContent = new Date(s.createdAt || Date.now()).toLocaleDateString();
+      const tdActs = document.createElement('td');
+      tdActs.className = 'acts';
+      tdActs.appendChild(rowButtons(s));
+      tr.appendChild(tdName); tr.appendChild(tdKey); tr.appendChild(tdType);
+      tr.appendChild(tdUpd); tr.appendChild(tdActs);
+      box.appendChild(tr);
+    });
+    renderStats();
+  }
+
+  function renderStats() {
+    const box = el('stats');
+    box.style.display = '';
+    const gated = cache.filter((s) => s.sonSlug).length;
+    const locked = cache.filter((s) => s.placeLock).length;
+    const exp = cache.filter((s) => s.expiresAt).length;
+    const defs = [[cache.length, 'Scripts'], [gated, 'Key-gated'], [locked, 'Place-locked'], [exp, 'Expiring']];
+    box.innerHTML = '';
+    defs.forEach(([n, label]) => {
+      const d = document.createElement('div');
+      d.className = 'stat';
+      const b = document.createElement('b');
+      b.textContent = n;
+      const sp = document.createElement('span');
+      sp.textContent = label;
+      d.appendChild(b); d.appendChild(sp);
+      box.appendChild(d);
     });
   }
 
@@ -237,6 +276,17 @@
       return b;
     };
     mk('Edit', () => startEdit(s.id));
+    mk('Key', async () => {
+      if (!confirm('Rotate key for [' + s.slug + ']? Old loaders die immediately.')) return;
+      const r = await api('/api/scripts?id=' + encodeURIComponent(s.id), 'PUT', { rotate: 1 });
+      if (!r.ok) { alert(r.data.error || 'Rotate failed'); return; }
+      el('r-slug').value = r.data.script.slug;
+      el('r-url').value = r.data.rawUrl;
+      el('r-loader').value = r.data.rawLoader;
+      el('result').classList.add('show');
+      el('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      loadManaged();
+    });
     mk('Loader', () => {
       const host = location.host;
       const loader = s.sonSlug
@@ -276,10 +326,14 @@
 
   async function loadManaged() {
     const box = el('script-list');
-    if (!me) { box.innerHTML = '<p class="hint">Login to see your scripts.</p>'; return; }
-    box.innerHTML = '<p class="hint">Loading...</p>';
+    if (!me) {
+      el('stats').style.display = 'none';
+      box.innerHTML = '<tr><td colspan="5"><p class="hint">Login to see your scripts.</p></td></tr>';
+      return;
+    }
+    box.innerHTML = '<tr><td colspan="5"><p class="hint">Loading...</p></td></tr>';
     const r = await api('/api/scripts');
-    if (!r.ok) { box.innerHTML = '<p class="hint">Could not load. ' + (r.data.error || '') + '</p>'; return; }
+    if (!r.ok) { box.innerHTML = '<tr><td colspan="5"><p class="hint">Could not load. ' + (r.data.error || '') + '</p></td></tr>'; return; }
     cache = r.data.scripts || [];
     renderList(el('q-search').value);
   }

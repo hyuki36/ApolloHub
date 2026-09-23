@@ -89,6 +89,16 @@ module.exports = async function handler(req, res) {
     const e = await getScript(String(q.id));
     if (!e || !canTouch(viewer, e)) return res.status(404).json({ error: 'Not found' });
     const body = parseBody(req);
+    // Rotate key: PUT ?id=&rotate=1 -> key moi (lo key cu chet ngay).
+    if (body.rotate) {
+      const updated = await updateScript(e.id, { k: newKey() });
+      const host = baseUrl(req).replace(/^https?:\/\//, '');
+      return res.status(200).json({
+        script: updated,
+        rawUrl: baseUrl(req) + '/raw/' + encodeURIComponent(updated.slug) + '.lua',
+        rawLoader: buildRawLoader(host, updated)
+      });
+    }
     const patch = {};
     if (body.name !== undefined) patch.name = body.name;
     if (body.code !== undefined) {

@@ -6,7 +6,7 @@
 <title>ApolloHub — Roblox Anti-Raw Hub</title>
 <meta name="description" content="ApolloHub — anti-raw loadstring hub. Browsers see a black screen, Roblox still loads the full code.">
 <link rel="icon" href="https://i.pinimg.com/1200x/fa/ca/7a/faca7a2e4250f6684759598f006db0b7.jpg">
-<link rel="stylesheet" href="/style.css?v=6">
+<link rel="stylesheet" href="/style.css?v=7">
 </head>
 <body>
 <div class="bg"></div>
@@ -113,9 +113,13 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main.lua"))(
       <p class="hint">“Open test” opens the URL in a browser → blocked, then Home. Bots/curl receive the 1-line loader. Only the game receives the original source.</p>
     </div>
 
+    <div class="stats" id="stats" style="display:none"></div>
     <div class="codebox">
       <div class="code-head"><span><span id="script-list-title">MY SCRIPTS</span> (<span id="link-count">0</span>)</span><button class="mini" id="btn-reload">Reload</button></div>
-      <div id="script-list" style="padding:12px;display:grid;gap:8px"><p class="hint">Add New Scripts First. . .</p></div>
+      <div class="table-wrap"><table class="stable">
+        <thead><tr><th>Name</th><th>Key</th><th>Type</th><th>Updated</th><th>Actions</th></tr></thead>
+        <tbody id="script-list"><tr><td colspan="5"><p class="hint">Add New Scripts First. . .</p></td></tr></tbody>
+      </table></div>
     </div>
     </div>
   </section>
@@ -127,6 +131,7 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main.lua"))(
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.8 — Admin table + key rotate</b><span>2026-09-23</span><p>Scripts dashboard like a real admin panel: stat cards, table with type badges, per-row Loader/Edit/Key/Delete. One click rotates a leaked key.</p></div>
       <div class="t-item"><b>v3.7 — Son Studio key gate</b><span>2026-09-23</span><p>Optional game_slug per script: players need a valid Son Studio key (HWID-checked) to load. No setup, no secrets.</p></div>
       <div class="t-item"><b>v3.6 — Keyless raw files</b><span>2026-09-23</span><p>/raw/name.lua with no key. Browser blocked, bots get loader, game gets source. Keyed API kept.</p></div>
       <div class="t-item"><b>v3.5 — Single-user</b><span>2026-09-23</span><p>Public registration closed. Owner login only, zero auth errors, nobody can squat slugs.</p></div>
@@ -162,6 +167,6 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main.lua"))(
   <footer>© 2026 APOLLOHUB · BLACK / WHITE / GRAY · <a href="https://discord.gg/c3xVMnUUBv" target="_blank" rel="noopener">discord.gg/c3xVMnUUBv</a></footer>
 </main>
 
-<script src="/app.js?v=7"></script>
+<script src="/app.js?v=8"></script>
 </body>
 </html>
