@@ -4,6 +4,21 @@
   const panels = { home: el('panel-home'), link: el('panel-link'), updates: el('panel-updates'), discord: el('panel-discord') };
   let me = null;
   let editingId = null;
+  // Credentials gui kem moi request (stateless) — song moi instance, khong phu thuoc cookie.
+  let creds = null;
+  try {
+    const saved = sessionStorage.getItem('apollo_creds');
+    if (saved) creds = JSON.parse(saved);
+  } catch (e) { /* ignore */ }
+
+  function saveCreds(email, password) {
+    creds = { email, password };
+    try { sessionStorage.setItem('apollo_creds', JSON.stringify(creds)); } catch (e) { /* ignore */ }
+  }
+  function clearCreds() {
+    creds = null;
+    try { sessionStorage.removeItem('apollo_creds'); } catch (e) { /* ignore */ }
+  }
 
   function el(id) { return document.getElementById(id); }
 
@@ -21,6 +36,8 @@
   el('account-chip').addEventListener('click', () => show('link'));
 
   async function api(path, method, body) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (creds) headers.Authorization = 'Basic ' + btoa(unescape(encodeURIComponent(creds.email + ':' + creds.password)));
     const r = await fetch(path, {
       method: method || 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -75,15 +92,18 @@
     el('account-chip').textContent = logged ? me.email.split('@')[0] : 'Login';
     if (logged) {
       el('account-label').textContent = 'SIGNED IN AS ' + me.email.toUpperCase() + (me.owner ? ' · OWNER' : '');
-      el('script-list-title').childNodes[0].textContent = me.owner ? 'ALL SCRIPTS ' : 'MY SCRIPTS ';
+      el('script-list-title').textContent = me.owner ? 'ALL SCRIPTS' : 'MY SCRIPTS';
     }
     if (!logged) { editingId = null; syncCreateBtn(); }
   }
 
   el('btn-register').addEventListener('click', async () => {
     authMsg('Registering...');
-    const r = await api('/api/auth', 'POST', { action: 'register', email: el('a-email').value, password: el('a-pass').value });
+    const email = el('a-email').value;
+    const password = el('a-pass').value;
+    const r = await api('/api/auth', 'POST', { action: 'register', email, password });
     if (!r.ok) { authMsg(r.data.error || 'Register failed'); return; }
+    saveCreds(email, password);
     el('a-pass').value = '';
     authMsg('Registered. Welcome.');
     refreshMe();
@@ -91,15 +111,19 @@
 
   el('btn-login').addEventListener('click', async () => {
     authMsg('Logging in...');
-    const r = await api('/api/auth', 'POST', { action: 'login', email: el('a-email').value, password: el('a-pass').value });
+    const email = el('a-email').value;
+    const password = el('a-pass').value;
+    const r = await api('/api/auth', 'POST', { action: 'login', email, password });
     if (!r.ok) { authMsg(r.data.error || 'Login failed'); return; }
+    saveCreds(email, password);
     el('a-pass').value = '';
     authMsg('');
     refreshMe();
   });
 
   el('btn-logout').addEventListener('click', async () => {
-    await api('/api/auth', 'POST', { action: 'logout' });
+    try { await api('/api/auth', 'POST', { action: 'logout' }); } catch (e) { /* ignore */ }
+    clearCreds();
     me = null;
     renderAuth();
   });
