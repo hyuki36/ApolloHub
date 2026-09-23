@@ -58,12 +58,18 @@ Vercel → Project → **Settings → Environment Variables**:
 | Key | Tác dụng |
 |---|---|
 | `ADMIN_KEY` | Khóa route `/api/create` cũ. Tab Link mới dùng login, không cần key này. |
-| `GITHUB_TOKEN` | **Bật lưu vĩnh viễn:** link + tài khoản tạo trên web tự commit vào repo → Vercel redeploy → sống vĩnh viễn. Không set thì chỉ sống tạm trên instance hiện tại. |
-| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Cách khác để lưu vĩnh viễn (không cần redeploy). Có KV thì không cần `GITHUB_TOKEN`. |
-| `SESSION_SECRET` | Chuỗi bí mật ký session đăng nhập. **Nên set 1 chuỗi ngẫu nhiên dài** — không set thì dùng secret mặc định (chạy được nhưng kém an toàn, tất cả session mất hiệu lực khi đổi secret). |
-| `OWNER_EMAILS` | Mặc định `ahba9912@gmail.com`. Có thể thêm email khác cách nhau bằng dấu phẩy. |
+| `SESSION_SECRET` | Chuỗi bí mật ký session đăng nhập. **Nên set 1 chuỗi ngẫu nhiên dài.** |
+| `OWNER_EMAILS` | Mặc định `ahba9912@gmail.com`. Thêm email khác cách nhau bằng dấu phẩy. |
+| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Optional: lưu vĩnh viễn không cần redeploy. Không có cũng chạy đủ. |
+| `GITHUB_TOKEN` | Optional nâng cao (tự commit khi tạo). Không cần — đã có nút Publish. |
 
-**Lấy `GITHUB_TOKEN` (2 phút, làm 1 lần):** GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → tick `repo` → copy → Vercel → Project → Settings → Environment Variables → Add `GITHUB_TOKEN` = token vừa copy (+ `GITHUB_REPO` = `hyuki36/ApolloHub` nếu repo khác) → Save → Redeploy 1 lần. Từ đó tab Link báo `Saved permanently` là link sống vĩnh viễn.
+## 3b. Publish vĩnh viễn KHÔNG cần token
+
+Repo `scripts.json` là sự thật vĩnh viễn, server chỉ là bộ nhớ chạy:
+
+1. Login owner → tab Link → **Download scripts.json** (file đầy đủ, gồm mọi script).
+2. Mở [trang upload repo](https://github.com/hyuki36/ApolloHub/upload/main), thả file vào, Commit changes.
+3. Vercel tự redeploy. Xong — link sống vĩnh viễn, đúng source gốc.
 
 ## 3b. Scripts Storage + tài khoản (mới)
 

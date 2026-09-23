@@ -71,6 +71,7 @@
     el('auth-box').style.display = logged ? 'none' : '';
     el('account-bar').style.display = logged ? '' : 'none';
     el('storage').style.display = logged ? '' : 'none';
+    el('publish-box').style.display = logged && me.owner ? '' : 'none';
     el('account-chip').textContent = logged ? me.email.split('@')[0] : 'Login';
     if (logged) {
       el('account-label').textContent = 'SIGNED IN AS ' + me.email.toUpperCase() + (me.owner ? ' · OWNER' : '');
@@ -84,7 +85,7 @@
     const r = await api('/api/auth', 'POST', { action: 'register', email: el('a-email').value, password: el('a-pass').value });
     if (!r.ok) { authMsg(r.data.error || 'Register failed'); return; }
     el('a-pass').value = '';
-    authMsg(r.data.persisted === false ? 'Registered (temporary — add GITHUB_TOKEN to keep accounts)' : 'Registered. Welcome.');
+    authMsg('Registered. Welcome.');
     refreshMe();
   });
 
@@ -139,7 +140,7 @@
     el('r-url').value = r.data.payloadUrl;
     el('r-loader').value = r.data.payloadLoader;
     el('result').classList.add('show');
-    createMsg(r.data.persisted ? 'Saved permanently: ' + r.data.slug : 'Saved (temporary — add GITHUB_TOKEN on Vercel to keep it)');
+    createMsg(r.data.persisted ? 'Saved permanently: ' + r.data.slug : 'Saved — press Publish below to keep it forever');
     loadManaged();
   });
 
@@ -149,6 +150,19 @@
     if (el('r-url').value) window.open(el('r-url').value, '_blank');
   });
   el('btn-reload').addEventListener('click', loadManaged);
+
+  el('btn-export').addEventListener('click', async () => {
+    el('export-status').textContent = 'Preparing...';
+    const r = await api('/api/scripts?export=1');
+    if (!r.ok) { el('export-status').textContent = r.data.error || 'Export failed'; return; }
+    const blob = new Blob([JSON.stringify(r.data.file, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'scripts.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    el('export-status').textContent = 'Downloaded — upload it to the repo, done.';
+  });
 
   function rowButtons(s) {
     const wrap = document.createElement('span');

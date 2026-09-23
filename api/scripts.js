@@ -35,6 +35,14 @@ module.exports = async function handler(req, res) {
   if (!viewer) return res.status(401).json({ error: 'Login required' });
   const q = req.query || {};
 
+  // Owner-only full export for no-token Publish (Download scripts.json -> upload to repo).
+  if (req.method === 'GET' && (q.export === '1' || q.export === 1)) {
+    if (!viewer.owner) return res.status(403).json({ error: 'Owner only' });
+    const all = await getAllEntries();
+    const clean = all.map((e) => { const c = { ...e }; delete c.persisted; return c; });
+    return res.status(200).json({ file: { scripts: clean } });
+  }
+
   if (req.method === 'GET') {
     if (q.id) {
       const e = await getScript(String(q.id));
