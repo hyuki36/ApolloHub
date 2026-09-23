@@ -1,3 +1,11 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "user_owner_seed",
+      "email": "ahba9912@gmail.com",
+      "pass": "scrypt$0a611f37b5625440284a5ba726c9e99f$d258c599dfcba256166788881ec69d2aca8efca50c41f0ea0f4bbc9fe84419df5ff29d65e3b0f47ff1fde9d1ed8d65c215ca0aa8773f383f617c94e47f08b36a",
+      "owner": true,
+      "createdAt": 1790140374844
+    }
+  ]
 }

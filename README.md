@@ -58,7 +58,7 @@ Vercel → Project → **Settings → Environment Variables**:
 | Key | Tác dụng |
 |---|---|
 | `ADMIN_KEY` | Khóa route `/api/create` cũ. Tab Link mới dùng login, không cần key này. |
-| `SESSION_SECRET` | Chuỗi bí mật ký session đăng nhập. **Nên set 1 chuỗi ngẫu nhiên dài.** |
+| `SESSION_SECRET` | Chuỗi bí mật ký session. Không set vẫn login được nhưng rớt đăng nhập khi server restart — set 1 chuỗi ngẫu nhiên dài để giữ. |
 | `OWNER_EMAILS` | Mặc định `ahba9912@gmail.com`. Thêm email khác cách nhau bằng dấu phẩy. |
 | `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Optional: lưu vĩnh viễn không cần redeploy. Không có cũng chạy đủ. |
 | `GITHUB_TOKEN` | Optional nâng cao (tự commit khi tạo). Không cần — đã có nút Publish. |
