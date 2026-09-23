@@ -40,11 +40,17 @@
     if (creds) headers.Authorization = 'Basic ' + btoa(unescape(encodeURIComponent(creds.email + ':' + creds.password)));
     const r = await fetch(path, {
       method: method || 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: body ? JSON.stringify(body) : undefined
     });
     let j = {};
     try { j = await r.json(); } catch (e) { /* non-json */ }
+    if (r.status === 401 && creds && !String(path).includes('/api/auth')) {
+      // Credentials het han (doi mat khau / reset user) -> ve trang thai logout sach.
+      clearCreds();
+      me = null;
+      renderAuth();
+    }
     return { ok: r.ok, status: r.status, data: j };
   }
 
