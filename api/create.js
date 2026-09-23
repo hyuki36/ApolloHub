@@ -81,5 +81,5 @@ module.exports = async function handler(req, res) {
     + 'local _u=("https://' + getHost(req) + '/api/payload?s=".._s.."&k=".._k.."&hwid="..tostring(_h or "unknown"):gsub("[^%w%-%.:]","").."&place="..tostring(game.PlaceId))\n'
     + 'loadstring(game:HttpGet(_u))()';
 
-  return res.status(200).json({ id, slug, k, name, url, payloadUrl, loader, payloadLoader });
+  return res.status(200).json({ id, slug, k, name, url, payloadUrl, loader, payloadLoader, persisted: Boolean(entry.persisted) });
 };

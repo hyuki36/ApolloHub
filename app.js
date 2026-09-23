@@ -68,7 +68,7 @@
       el('r-url').value = j.payloadUrl;
       el('r-loader').value = j.payloadLoader;
       el('result').classList.add('show');
-      toast('Created: ' + j.id);
+      toast(j.persisted ? 'Saved permanently: ' + (j.slug || j.id) : 'Saved temporarily — add GITHUB_TOKEN on Vercel to keep it forever');
       loadList();
     } catch (e) { toast('Network error'); }
   });

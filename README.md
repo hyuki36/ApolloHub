@@ -58,7 +58,10 @@ Vercel → Project → **Settings → Environment Variables**:
 | Key | Tác dụng |
 |---|---|
 | `ADMIN_KEY` | Ai cũng tạo link được nếu trống. Set 1 chuỗi bí mật thì tab Link phải nhập đúng key mới tạo được. |
-| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Link tạo trên web mới **vĩnh viễn**. Không set thì link lưu theo instance + `/tmp` (demo ok, redeploy / scale có thể mất — code gốc vẫn còn trong `scripts.json`). Tạo free ở Upstash Redis / Vercel KV rồi paste vào. |
+| `GITHUB_TOKEN` | **Bật lưu vĩnh viễn:** link bấm tạo trên web tự commit vào `scripts.json` → Vercel redeploy → sống vĩnh viễn, đúng source gốc, không bao giờ `invalid link`. Không set thì link chỉ sống tạm trên instance hiện tại. |
+| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Cách khác để lưu vĩnh viễn (không cần redeploy). Có KV thì không cần `GITHUB_TOKEN`. |
+
+**Lấy `GITHUB_TOKEN` (2 phút, làm 1 lần):** GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → tick `repo` → copy → Vercel → Project → Settings → Environment Variables → Add `GITHUB_TOKEN` = token vừa copy (+ `GITHUB_REPO` = `hyuki36/ApolloHub` nếu repo khác) → Save → Redeploy 1 lần. Từ đó tab Link báo `Saved permanently` là link sống vĩnh viễn.
 
 ## 4. Domain riêng (vd: apollohub.gg, choi.vn...)
 
