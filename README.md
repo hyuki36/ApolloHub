@@ -71,12 +71,10 @@ Repo `scripts.json` là sự thật vĩnh viễn, server chỉ là bộ nhớ ch
 
 Con bot review đã xóa. Thay vào đó, GitHub Actions ping web mỗi 5 phút (`.github/workflows/keepalive.yml`, không cần secret) để Vercel không tắt instance — scripts tạo trên web sống lâu trong storage. Quy tắc duy nhất: **đừng push code mới khi không cần**, mỗi lần redeploy là memory reset 1 lần.
 
-## 3b. Scripts Storage + tài khoản (mới)
+## 3b. Scripts Storage — single-user (mặc định)
 
-- Tab **Link**: chưa login chỉ thấy form đăng nhập/đăng ký. Login xong mới tạo + quản lý scripts.
-- Mỗi user chỉ thấy/sửa/xóa **script của mình**. Slug (`s=`) không đổi được sau khi tạo để loader cũ không gãy.
-- **Owner** (`ahba9912@gmail.com`): thấy **tất cả** scripts + sources của mọi người, sửa/xóa được hết, có huy hiệu OWNER.
-- Game load (`/api/payload`, `/api/r`) không đổi: `s+k` đúng → source gốc trong storage.
+- Chỉ owner login (`ahba9912@gmail.com`), không có đăng ký công khai — không ai chiếm slug, không lỗi auth linh tinh.
+- Muốn mở multi-user sau này: set `ALLOW_REGISTER=true` trên Vercel.
 
 ## 4. Domain riêng (vd: apollohub.gg, choi.vn...)
 

@@ -72,9 +72,8 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main/YOUR_KE
         <div><input id="a-pass" type="password" placeholder="Password (min 6)"></div>
       </div>
       <div><button class="btn primary" id="btn-login">Login</button>
-      <button class="btn ghost" id="btn-register">Register</button>
       <span class="hint" id="auth-status"></span></div>
-      <p class="hint">First time here? Press <b style="color:#fff">Register</b> to create your account, then Login. Owner account is ready — just Login.</p>
+      <p class="hint">Owner login only — this hub is single-user.</p>
     </div>
 
     <div class="codebox" id="account-bar" style="display:none">
@@ -127,6 +126,7 @@ loadstring(game:HttpGet("https://apollohub-nu.vercel.app/raw/apollo_main/YOUR_KE
       <h1 class="title wave-text" style="font-size:clamp(26px,4vw,38px)">UPDATES</h1>
     </div>
     <div class="timeline">
+      <div class="t-item"><b>v3.5 — Single-user</b><span>2026-09-23</span><p>Public registration closed. Owner login only, zero auth errors, nobody can squat slugs.</p></div>
       <div class="t-item"><b>v3.4 — GitHub-style raw</b><span>2026-09-23</span><p>Raw links look like GitHub: /raw/slug/key, 1-line loader. Same 3-tier protection everywhere.</p></div>
       <div class="t-item"><b>v3.3 — No bot, keep-alive storage</b><span>2026-09-23</span><p>Review bot removed. Web storage stays alive via 5-minute ping. Raw links live on the web, browsers get NOT AUTHORIZED then #home.</p></div>
       <div class="t-item"><b>v3.2 — Review bot</b><span>2026-09-23</span><p>Hidden bot auto-approves scripts every 10 minutes: scans, merges into scripts.json, commits. No setup needed.</p></div>

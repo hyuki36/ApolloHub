@@ -102,18 +102,6 @@
     if (!logged) { editingId = null; syncCreateBtn(); }
   }
 
-  el('btn-register').addEventListener('click', async () => {
-    authMsg('Registering...');
-    const email = el('a-email').value;
-    const password = el('a-pass').value;
-    const r = await api('/api/auth', 'POST', { action: 'register', email, password });
-    if (!r.ok) { authMsg(r.data.error || 'Register failed'); return; }
-    saveCreds(email, password);
-    el('a-pass').value = '';
-    authMsg('Registered. Welcome.');
-    refreshMe();
-  });
-
   el('btn-login').addEventListener('click', async () => {
     authMsg('Logging in...');
     const email = el('a-email').value;

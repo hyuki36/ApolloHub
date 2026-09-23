@@ -26,6 +26,10 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
   if (action === 'register') {
+    // Single-user hub: khoa dang ky cong khai (mo lai bang ALLOW_REGISTER=true).
+    if (process.env.ALLOW_REGISTER !== 'true') {
+      return res.status(403).json({ error: 'Registration is closed on this hub' });
+    }
     const r = await register(body.email, body.password);
     if (r.error) return res.status(r.status).json({ error: r.error });
     res.setHeader('Set-Cookie', sessionCookie(r.token));
