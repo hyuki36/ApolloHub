@@ -52,7 +52,7 @@
       <div class="code-head"><span>USAGE — LOADSTRING</span><button class="mini" data-copy="demo">Copy</button></div>
       <pre id="code-demo">-- ApolloHub loader (replace the URL with your link from the Link tab)
 local hwid = (typeof(gethwid) == "function" and gethwid() or game:GetService("RbxAnalyticsService"):GetClientId())
-local url = "https://ApolloHub.vercel.app/api/r?id=apollo_xxxx&k=YOUR_KEY"
+local url = "https://apollohub-nu.vercel.app/api/r?id=apollo_xxxx&k=YOUR_KEY"
   .. "&hwid=" .. tostring(hwid or "unknown"):gsub("[^%w%-%.:]", "")
   .. "&place=" .. tostring(game.PlaceId)
 loadstring(game:HttpGet(url))()</pre>

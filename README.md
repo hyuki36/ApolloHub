@@ -40,14 +40,14 @@ git push -u origin main
 
 Nếu repo đã có code cũ và muốn ghi đè: backup trước, rồi `git push -u origin main --force`.
 
-## 2. Deploy Vercel → tên ApolloHub.vercel.app
+## 2. Deploy Vercel → apollohub-nu.vercel.app
 
 1. Vào [vercel.com](https://vercel.com) → **Add New → Project** → Import repo `hyuki36/ApolloHub`.
 2. Framework Preset: **Other**. Build Command: để trống. Output Directory: để trống (web tĩnh ở root).
-3. **Project Name** đặt đúng `ApolloHub` → domain mặc định sẽ là `https://ApolloHub.vercel.app`.
-4. Bấm **Deploy**. Xong vào `https://ApolloHub.vercel.app/#home` kiểm tra 4 tab.
+3. **Project Name** đặt `apollohub-nu` → domain mặc định sẽ là `https://apollohub-nu.vercel.app`.
+4. Bấm **Deploy**. Xong vào `https://apollohub-nu.vercel.app/#home` kiểm tra 4 tab.
 5. Test anti-raw:
-   - Browser mở `https://ApolloHub.vercel.app/api/raw` → màn đen → về Home. Đúng.
+   - Browser mở `https://apollohub-nu.vercel.app/api/raw` → màn đen → về Home. Đúng.
    - Vào tab **Link** tạo 1 link → copy loader → chạy trong executor → ra code. Đúng.
    - `curl` link `/api/r?id=..&k=..` (không giả UA Roblox) → cũng chỉ thấy HTML đen.
 
@@ -64,7 +64,7 @@ Vercel → Project → **Settings → Environment Variables**:
 
 Bạn hỏi “domain riêng” — có 2 loại:
 
-**A. Dùng luôn domain Vercel free:** đặt Project Name = `ApolloHub` là có `ApolloHub.vercel.app`. Không cần làm gì thêm.
+**A. Dùng luôn domain Vercel free:** project bạn đã là `apollohub-nu` → có sẵn `apollohub-nu.vercel.app`. Không cần làm gì thêm.
 
 **B. Domain riêng mua ngoài (Namecheap / Porkbun / Cloudflare...):**
 
